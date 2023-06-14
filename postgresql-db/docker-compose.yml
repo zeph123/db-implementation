@@ -1,0 +1,30 @@
+
+version: "3.8"
+
+services:
+
+  postgresql_db:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: postgresql_db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    env_file: .env
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=pl_PL.utf8 --lc-collate=pl_PL.utf8 --lc-ctype=pl_PL.utf8"
+    volumes:
+      - ./db-data:/var/lib/postgresql/data:rw
+    networks:
+      - db_network
+
+volumes:
+  db-data:
+
+networks:
+  db_network:
+    driver: bridge

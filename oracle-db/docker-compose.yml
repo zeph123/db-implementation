@@ -1,0 +1,28 @@
+
+version: "3.8"
+
+services:
+
+  oracle_db:
+    image: container-registry.oracle.com/database/express:${ORACLE_VERSION}-xe
+    container_name: oracle_db
+    restart: unless-stopped
+    ports:
+      - "1521:1521"
+      - "5500:5500"
+    env_file: .env
+    environment:
+      ORACLE_PWD: ${ORACLE_PWD}
+    volumes:
+      - ./db-data/oradata:/opt/oracle/oradata:rw
+      # - ./db-data/scripts/setup:/opt/oracle/scripts/setup:rw
+      # - ./db-data/scripts/startup:/opt/oracle/scripts/startup:rw
+    networks:
+      - db_network
+
+volumes:
+  db-data:
+
+networks:
+  db_network:
+    driver: bridge
